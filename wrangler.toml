@@ -18,7 +18,7 @@ workers_dev = true
 name = "prod-pac"
 vars = { ENVIRONMENT = "production" }
 routes = [
-    { pattern = "proxy.erfianugrah.com/*", zone_id = "3f2c4daa43d5920f313654a873b31d06"},
+    { pattern = "proxy.erfianugrah.com", custom_domain = true },
 ]
 # Secrets
 # NL_DOMAIN
