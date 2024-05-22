@@ -1,7 +1,5 @@
 export function nl_pac_file(env) {
-
-const nl =
-`
+  const nl = `
 function FindProxyForURL(url, host) {
 // No proxy for private (RFC 1918) IP addresses (intranet sites)
   // if (
@@ -30,9 +28,7 @@ function FindProxyForURL(url, host) {
 }
 
 export function sg_pac_file(env) {
-
-const sg =
-`
+  const sg = `
 function FindProxyForURL(url, host) {
 // No proxy for private (RFC 1918) IP addresses (intranet sites)
   // if (

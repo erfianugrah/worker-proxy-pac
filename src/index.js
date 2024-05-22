@@ -1,7 +1,7 @@
 import { nl_pac_file, sg_pac_file } from "./pac_file.js";
 
 export default {
-  async fetch(request, env) {
+  fetch(request, env) {
     const url = new URL(request.url);
 
     if (url.pathname === "/nl.pac") {
