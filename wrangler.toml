@@ -20,6 +20,7 @@ vars = { ENVIRONMENT = "production" }
 routes = [
     { pattern = "proxy.erfianugrah.com", custom_domain = true },
 ]
+
 # Secrets
 # NL_DOMAIN
 # SG_DOMAIN
