@@ -1,15 +1,15 @@
-import { nl_pac_file, sg_pac_file } from "./pac_file.js";
+import { nl_pac_file, sg_pac_file } from './pac_file.js';
 
 export default {
   fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === "/nl.pac") {
+    if (url.pathname === '/nl.pac') {
       return nl_pac_file(env);
-    } else if (url.pathname === "/sg.pac") {
+    } else if (url.pathname === '/sg.pac') {
       return sg_pac_file(env);
     } else {
-      return new Response("Not Found", { status: 404 });
+      return new Response('Not Found', { status: 404 });
     }
   },
 };
