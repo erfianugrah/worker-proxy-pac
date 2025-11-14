@@ -1,5 +1,11 @@
-export function nl_pac_file(env) {
-  const nl = `
+export interface Env {
+	NL_DOMAIN: string;
+	SG_DOMAIN: string;
+	ENVIRONMENT?: string;
+}
+
+export function nl_pac_file(env: Env): Response {
+	const nl = `
 function FindProxyForURL(url, host) {
 // No proxy for private (RFC 1918) IP addresses (intranet sites)
   // if (
@@ -18,17 +24,17 @@ function FindProxyForURL(url, host) {
   return "HTTPS ${env.NL_DOMAIN}.proxy.cloudflare-gateway.com:443";
 }
 `;
-  // Set headers to prevent caching
-  const headers = new Headers({
-    "Content-Type": "application/x-ns-proxy-auto-config",
-    "Cache-Control": "no-store, max-age=0",
-  });
+	// Set headers to prevent caching
+	const headers = new Headers({
+		"Content-Type": "application/x-ns-proxy-auto-config",
+		"Cache-Control": "no-store, max-age=0",
+	});
 
-  return new Response(nl, { headers: headers });
+	return new Response(nl, { headers: headers });
 }
 
-export function sg_pac_file(env) {
-  const sg = `
+export function sg_pac_file(env: Env): Response {
+	const sg = `
 function FindProxyForURL(url, host) {
 // No proxy for private (RFC 1918) IP addresses (intranet sites)
   // if (
@@ -47,11 +53,11 @@ function FindProxyForURL(url, host) {
   return "HTTPS ${env.SG_DOMAIN}.proxy.cloudflare-gateway.com:443";
 }
 `;
-  // Set headers to prevent caching
-  const headers = new Headers({
-    "Content-Type": "application/x-ns-proxy-auto-config",
-    "Cache-Control": "no-store, max-age=0",
-  });
+	// Set headers to prevent caching
+	const headers = new Headers({
+		"Content-Type": "application/x-ns-proxy-auto-config",
+		"Cache-Control": "no-store, max-age=0",
+	});
 
-  return new Response(sg, { headers: headers });
+	return new Response(sg, { headers: headers });
 }

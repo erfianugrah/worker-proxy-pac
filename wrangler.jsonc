@@ -1,0 +1,33 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "worker-proxy-pac",
+	"main": "src/index.ts",
+	"compatibility_date": "2024-05-12",
+	"compatibility_flags": ["nodejs_compat"],
+	"dev": {
+		"port": 9001,
+		"local_protocol": "http",
+		"upstream_protocol": "https"
+	},
+	"env": {
+		"staging": {
+			"name": "staging-pac",
+			"vars": {
+				"ENVIRONMENT": "staging"
+			},
+			"workers_dev": true
+		},
+		"prod": {
+			"name": "prod-pac",
+			"vars": {
+				"ENVIRONMENT": "production"
+			},
+			"routes": [
+				{
+					"pattern": "proxy.erfianugrah.com",
+					"custom_domain": true
+				}
+			]
+		}
+	}
+}
