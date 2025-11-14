@@ -1,0 +1,4 @@
+# Allow unencrypted standard Node.js project files
+package.json
+package-lock.json
+tsconfig.json
