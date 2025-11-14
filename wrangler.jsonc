@@ -3,7 +3,9 @@
 	"name": "worker-proxy-pac",
 	"main": "src/index.ts",
 	"compatibility_date": "2024-05-12",
-	"compatibility_flags": ["nodejs_compat"],
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"dev": {
 		"port": 9001,
 		"local_protocol": "http",
@@ -24,7 +26,7 @@
 			},
 			"routes": [
 				{
-					"pattern": "proxy.erfianugrah.com",
+					"pattern": "proxy.erfi.dev",
 					"custom_domain": true
 				}
 			]
