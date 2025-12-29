@@ -26,6 +26,7 @@ A Cloudflare Worker that serves PAC (Proxy Auto-Configuration) files for routing
 This Cloudflare Worker application provides a lightweight, serverless solution for distributing PAC files that automatically configure client devices to route traffic through Cloudflare Gateway proxies. It supports multiple geographical regions with dedicated endpoints for each location.
 
 The worker is designed to:
+
 - Serve PAC files with appropriate MIME types and caching headers
 - Support multiple geographical proxy configurations (Netherlands, Singapore)
 - Deploy seamlessly to Cloudflare's edge network for global availability
@@ -36,6 +37,7 @@ The worker is designed to:
 PAC (Proxy Auto-Configuration) files are JavaScript files that define how web browsers and other user agents automatically select the appropriate proxy server when accessing the internet.
 
 A PAC file contains a JavaScript function `FindProxyForURL(url, host)` that returns a proxy server string for each URL request. This enables:
+
 - Automatic proxy selection based on destination
 - Conditional routing (direct vs proxied connections)
 - Network-aware traffic management
@@ -87,12 +89,14 @@ Client Request → Cloudflare Edge → Worker → PAC File Response
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd worker-proxy-pac
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
@@ -100,6 +104,7 @@ npm install
 3. Configure environment variables (see [Configuration](#configuration) section)
 
 4. Verify installation:
+
 ```bash
 npm run dev
 ```
@@ -130,31 +135,31 @@ The `wrangler.jsonc` file contains deployment configuration:
 
 ```jsonc
 {
-  "name": "worker-proxy-pac",
-  "main": "src/index.ts",
-  "compatibility_date": "2024-05-12",
-  "compatibility_flags": ["nodejs_compat"],
-  "env": {
-    "staging": {
-      "name": "staging-pac",
-      "vars": {
-        "ENVIRONMENT": "staging"
-      },
-      "workers_dev": true
-    },
-    "prod": {
-      "name": "prod-pac",
-      "vars": {
-        "ENVIRONMENT": "production"
-      },
-      "routes": [
-        {
-          "pattern": "proxy.erfi.dev",
-          "custom_domain": true
-        }
-      ]
-    }
-  }
+	"name": "worker-proxy-pac",
+	"main": "src/index.ts",
+	"compatibility_date": "2024-05-12",
+	"compatibility_flags": ["nodejs_compat"],
+	"env": {
+		"staging": {
+			"name": "staging-pac",
+			"vars": {
+				"ENVIRONMENT": "staging",
+			},
+			"workers_dev": true,
+		},
+		"prod": {
+			"name": "prod-pac",
+			"vars": {
+				"ENVIRONMENT": "production",
+			},
+			"routes": [
+				{
+					"pattern": "proxy.erfi.dev",
+					"custom_domain": true,
+				},
+			],
+		},
+	},
 }
 ```
 
@@ -183,6 +188,7 @@ npm start
 The worker will be available at `http://localhost:9001`
 
 Test endpoints locally:
+
 ```bash
 # Netherlands PAC file
 curl http://localhost:9001/nl.pac
@@ -193,11 +199,11 @@ curl http://localhost:9001/sg.pac
 
 ### Available Endpoints
 
-| Endpoint | Description | Response Type |
-|----------|-------------|---------------|
-| `/nl.pac` | Netherlands Cloudflare Gateway PAC file | `application/x-ns-proxy-auto-config` |
-| `/sg.pac` | Singapore Cloudflare Gateway PAC file | `application/x-ns-proxy-auto-config` |
-| All other paths | 404 Not Found | `text/plain` |
+| Endpoint        | Description                             | Response Type                        |
+| --------------- | --------------------------------------- | ------------------------------------ |
+| `/nl.pac`       | Netherlands Cloudflare Gateway PAC file | `application/x-ns-proxy-auto-config` |
+| `/sg.pac`       | Singapore Cloudflare Gateway PAC file   | `application/x-ns-proxy-auto-config` |
+| All other paths | 404 Not Found                           | `text/plain`                         |
 
 ### PAC File Response Headers
 
@@ -291,6 +297,7 @@ worker-proxy-pac/
 #### src/index.ts
 
 Main worker entry point that:
+
 - Exports the default fetch handler
 - Routes requests based on URL pathname
 - Returns 404 for unknown paths
@@ -299,6 +306,7 @@ Main worker entry point that:
 #### src/pac_file.ts
 
 Contains:
+
 - `Env` interface defining required environment variables
 - `nl_pac_file()`: Generates Netherlands PAC file
 - `sg_pac_file()`: Generates Singapore PAC file
@@ -325,12 +333,13 @@ Contains:
 The PAC files configure clients to route all traffic through Cloudflare Gateway using:
 
 ```javascript
-return "HTTPS <organization-id>.proxy.cloudflare-gateway.com:443";
+return 'HTTPS <organization-id>.proxy.cloudflare-gateway.com:443';
 ```
 
 #### Commented-Out Features
 
 The PAC files include commented-out logic for:
+
 - Direct connections for private IP ranges (RFC 1918)
   - 10.0.0.0/8
   - 172.16.0.0/12
@@ -365,6 +374,7 @@ npm test -- --watch
 ### Test Configuration
 
 Tests run using `@cloudflare/vitest-pool-workers`, which provides:
+
 - Miniflare-based test environment
 - Cloudflare Workers runtime simulation
 - Environment variable injection
@@ -379,6 +389,7 @@ Tests run using `@cloudflare/vitest-pool-workers`, which provides:
 **Symptoms**: Browser shows proxy configuration error
 
 **Solutions**:
+
 - Verify the PAC file URL is accessible: `curl https://proxy.erfi.dev/nl.pac`
 - Check browser console for JavaScript errors in PAC file
 - Ensure MIME type is `application/x-ns-proxy-auto-config`
@@ -389,6 +400,7 @@ Tests run using `@cloudflare/vitest-pool-workers`, which provides:
 **Symptoms**: Worker returns PAC with undefined domains
 
 **Solutions**:
+
 - Check `.dev.vars` file exists and contains correct values (local)
 - Verify environment variables set in Cloudflare Workers dashboard (production)
 - Redeploy after updating environment variables
@@ -398,6 +410,7 @@ Tests run using `@cloudflare/vitest-pool-workers`, which provides:
 **Symptoms**: `wrangler deploy` command errors
 
 **Solutions**:
+
 - Verify you're authenticated: `wrangler whoami`
 - Login if needed: `wrangler login`
 - Check account has Workers enabled
@@ -408,6 +421,7 @@ Tests run using `@cloudflare/vitest-pool-workers`, which provides:
 **Symptoms**: Local development server won't start
 
 **Solutions**:
+
 - Kill process using port: `lsof -ti:9001 | xargs kill -9` (macOS/Linux)
 - Change port in `wrangler.jsonc` under `dev.port`
 
@@ -416,6 +430,7 @@ Tests run using `@cloudflare/vitest-pool-workers`, which provides:
 **Symptoms**: Build or type-checking fails
 
 **Solutions**:
+
 - Verify Node.js version: `node --version` (should be 16+)
 - Clean install: `rm -rf node_modules package-lock.json && npm install`
 - Check tsconfig.json for syntax errors
@@ -447,31 +462,37 @@ curl -I https://proxy.erfi.dev/nl.pac
 ### Development Workflow
 
 1. Create a feature branch:
+
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
 2. Make changes and test locally:
+
 ```bash
 npm run dev
 ```
 
 3. Run linting:
+
 ```bash
 npm run lint
 ```
 
 4. Fix linting issues:
+
 ```bash
 npm run lint:fix
 ```
 
 5. Run tests:
+
 ```bash
 npm test
 ```
 
 6. Commit changes following conventional commits:
+
 ```bash
 git commit -m "feat: add new region endpoint"
 ```
@@ -490,6 +511,7 @@ git commit -m "feat: add new region endpoint"
 To add a new regional PAC endpoint:
 
 1. Add environment variable in `wrangler.jsonc`:
+
 ```jsonc
 "vars": {
   "NEW_REGION_DOMAIN": "your-organization-id"
@@ -497,34 +519,37 @@ To add a new regional PAC endpoint:
 ```
 
 2. Update `Env` interface in `src/pac_file.ts`:
+
 ```typescript
 export interface Env {
-  NL_DOMAIN: string;
-  SG_DOMAIN: string;
-  NEW_REGION_DOMAIN: string;
+	NL_DOMAIN: string;
+	SG_DOMAIN: string;
+	NEW_REGION_DOMAIN: string;
 }
 ```
 
 3. Create PAC generator function in `src/pac_file.ts`:
+
 ```typescript
 export function new_region_pac_file(env: Env): Response {
-  const pac = `
+	const pac = `
 function FindProxyForURL(url, host) {
   return "HTTPS ${env.NEW_REGION_DOMAIN}.proxy.cloudflare-gateway.com:443";
 }
 `;
-  const headers = new Headers({
-    "Content-Type": "application/x-ns-proxy-auto-config",
-    "Cache-Control": "no-store, max-age=0",
-  });
-  return new Response(pac, { headers });
+	const headers = new Headers({
+		'Content-Type': 'application/x-ns-proxy-auto-config',
+		'Cache-Control': 'no-store, max-age=0',
+	});
+	return new Response(pac, { headers });
 }
 ```
 
 4. Add route in `src/index.ts`:
+
 ```typescript
-if (url.pathname === "/new-region.pac") {
-  return new_region_pac_file(env);
+if (url.pathname === '/new-region.pac') {
+	return new_region_pac_file(env);
 }
 ```
 
@@ -537,10 +562,6 @@ if (url.pathname === "/new-region.pac") {
 - Follow existing code style and patterns
 - Include clear description of changes
 - Reference related issues
-
-## License
-
-This project is private. All rights reserved.
 
 ---
 
